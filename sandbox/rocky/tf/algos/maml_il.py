@@ -28,6 +28,7 @@ class MAMLIL(BatchMAMLPolopt):
             importance_sampling_modifier=tf.identity,
             comet_logger=None,
         metalearn_baseline=False,
+            use_ppo=False,
             **kwargs):
         if optimizer is None:
             if optimizer_args is None:
@@ -37,6 +38,7 @@ class MAMLIL(BatchMAMLPolopt):
         self.step_size = step_size
         self.adam_curve = adam_curve if adam_curve is not None else [adam_steps]
         self.use_maml = use_maml
+        self.use_ppo = use_ppo
         self.l2loss_std_multiplier = l2loss_std_mult
         self.ism = importance_sampling_modifier
         #self.old_start_il_loss = None
@@ -117,7 +119,17 @@ class MAMLIL(BatchMAMLPolopt):
                 keys = self.policy.all_params.keys()
                 theta_circle = OrderedDict({key: tf.stop_gradient(self.policy.all_params[key]) for key in keys})
                 dist_info_sym_i_circle, _ = self.policy.dist_info_sym(obs_vars[i], state_info_vars, all_params=theta_circle)
+                ### The policy gradient
                 lr_per_step_fast = dist.likelihood_ratio_sym(action_vars[i], theta0_dist_info_vars[i], dist_info_sym_i_circle)
+                ### PPO cliping
+                if (self.use_ppo):
+                    lr_per_step_fast = tf.clip_by_value(
+                                                    lr_per_step_fast,
+                                                    0.8,
+                                                    1.2,
+                                                    name="PPO_Clip"
+                                                )
+                
                 lr_per_step_fast = self.ism(lr_per_step_fast)
 
                 # formulate a minimization problem
