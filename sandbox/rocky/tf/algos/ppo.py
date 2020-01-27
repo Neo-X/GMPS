@@ -46,7 +46,7 @@ class PPO(BatchPolopt, Serializable):
         else:
             self.extra_input_dim = 0
 
-        super(VPG, self).__init__(env=env, policy=policy, baseline=baseline, **kwargs)
+        super(PPO, self).__init__(env=env, policy=policy, baseline=baseline, **kwargs)
 
     @overrides
     def init_opt(self):
@@ -89,7 +89,7 @@ class PPO(BatchPolopt, Serializable):
         logli = dist.log_likelihood_sym(action_var, dist_info_vars)
         logli_old = dist.log_likelihood_sym(action_var, old_dist_info_vars)
         r_ = logli / logli_old
-        r_ = tf.tf.clip_by_value(r_, 0.8, 1.2)
+        r_ = tf.clip_by_value(r_, 0.8, 1.2)
         kl = dist.kl_sym(old_dist_info_vars, dist_info_vars)
 
         # formulate as a minimization problem
