@@ -1,5 +1,10 @@
 import sys
 
+"""
+    Example run:
+    GMPS_PATH=/home/gberseth/playground/GMPS MULTIWORLD_PATH=/home/gberseth/playground/R_multiworld/ python3 functional_scripts/local_test_ppo.py
+"""
+
 from rllab.misc.comet_logger import CometLogger
 # comet_logger = CometLogger(api_key="KWwx7zh6I2uw6oQMkpEo3smu0",
 #                             project_name="ml4l3", workspace="glenb")
@@ -282,13 +287,13 @@ if __name__ == '__main__':
 
     variant = {'taskIndex': 0,
                'init_file': None,
-               'n_parallel': 4,
+               'n_parallel': 8,
                'log_dir': 'data/Ant/',
                'seed': 123,
                'tasksFile': 'rad2_quat_v2',
                'batch_size': 10000,
                'policyType': policyType,
-               'n_itr': 10,
+               'n_itr': 1000,
                'default_step': 0.5,
                'envType': 'Ant',
                'init_flr': 0.5,
