@@ -99,7 +99,7 @@ class PPO(BatchPolopt, Serializable):
             mean_kl = tf.reduce_sum(kl * valid_var) / tf.reduce_sum(valid_var)
             max_kl = tf.reduce_max(kl * valid_var)
         else:
-            surr_obj = - tf.reduce_mean(logli * advantage_var)
+            surr_obj = - tf.reduce_mean(r_ * advantage_var)
             mean_kl = tf.reduce_mean(kl)
             max_kl = tf.reduce_max(kl)
 
@@ -123,7 +123,7 @@ class PPO(BatchPolopt, Serializable):
         logger.log("optimizing policy")
         inputs = ext.extract(
             samples_data,
-            "observations", "actions", "advantages"
+            "observations", "actions", "advantages" ## GAE R - V(s) 
         )
         agent_infos = samples_data["agent_infos"]
         state_info_list = [agent_infos[k] for k in self.policy.state_info_keys]
@@ -132,6 +132,7 @@ class PPO(BatchPolopt, Serializable):
             inputs += (samples_data["valids"],)
         dist_info_list = [agent_infos[k] for k in self.policy.distribution.dist_info_keys]
         loss_before = self.optimizer.loss(inputs)
+        ### For PPO this should be more than one step.
         self.optimizer.optimize(inputs)
         loss_after = self.optimizer.loss(inputs)
         logger.record_tabular("LossBefore", loss_before)

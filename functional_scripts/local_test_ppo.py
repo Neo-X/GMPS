@@ -4,6 +4,8 @@ import sys
     Example run:
     GMPS_PATH=/home/gberseth/playground/GMPS MULTIWORLD_PATH=/home/gberseth/playground/R_multiworld/ python3 functional_scripts/local_test_ppo.py
 """
+## TODO: Batch size vs amount of data collected
+## TODO: Number of PPO update steps
 
 from rllab.misc.comet_logger import CometLogger
 # comet_logger = CometLogger(api_key="KWwx7zh6I2uw6oQMkpEo3smu0",
