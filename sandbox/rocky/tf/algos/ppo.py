@@ -87,8 +87,8 @@ class PPO(BatchPolopt, Serializable):
 
         dist_info_vars = self.policy.dist_info_sym(obs_var, state_info_vars)
         logli = dist.log_likelihood_sym(action_var, dist_info_vars)
-        logli_old = dist.log_likelihood_sym(action_var, old_dist_info_vars)
-        r_ = logli / logli_old
+        # logli_old = dist.log_likelihood_sym(action_var, old_dist_info_vars)
+        r_ = dist.likelihood_ratio_sym(action_var, old_dist_info_vars, dist_info_vars)
         r_ = tf.clip_by_value(r_, 0.8, 1.2)
         kl = dist.kl_sym(old_dist_info_vars, dist_info_vars)
 
@@ -103,7 +103,7 @@ class PPO(BatchPolopt, Serializable):
             mean_kl = tf.reduce_mean(kl)
             max_kl = tf.reduce_max(kl)
 
-        input_list = [obs_var, action_var, advantage_var] + state_info_vars_list
+        input_list = [obs_var, action_var, advantage_var] + state_info_vars_list + old_dist_info_vars_list
         if is_recurrent:
             input_list.append(valid_var)
 
@@ -127,7 +127,8 @@ class PPO(BatchPolopt, Serializable):
         )
         agent_infos = samples_data["agent_infos"]
         state_info_list = [agent_infos[k] for k in self.policy.state_info_keys]
-        inputs += tuple(state_info_list)
+        dist_info_list = [agent_infos[k] for k in self.policy.distribution.dist_info_keys]
+        inputs += tuple(state_info_list) + tuple(dist_info_list)
         if self.policy.recurrent:
             inputs += (samples_data["valids"],)
         dist_info_list = [agent_infos[k] for k in self.policy.distribution.dist_info_keys]

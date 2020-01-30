@@ -4,54 +4,12 @@ import sys
     Example run:
     GMPS_PATH=/home/gberseth/playground/GMPS MULTIWORLD_PATH=/home/gberseth/playground/R_multiworld/ python3 functional_scripts/local_test_ppo.py
 """
+
+from rllab.misc.comet_logger import CometLogger
+
 ## TODO: Batch size vs amount of data collected
 ## TODO: Number of PPO update steps
 
-from rllab.misc.comet_logger import CometLogger
-# comet_logger = CometLogger(api_key="KWwx7zh6I2uw6oQMkpEo3smu0",
-#                             project_name="ml4l3", workspace="glenb")
-# comet_logger.set_name("local_test rl")
-comet_logger=None
-
-from rllab.baselines.linear_feature_baseline import LinearFeatureBaseline
-from rllab.baselines.zero_baseline import ZeroBaseline
-from rllab.envs.normalized_env import normalize
-from rllab.misc.instrument import stub, run_experiment_lite
-
-from sandbox.rocky.tf.algos.vpg import VPG as vpg_basic
-from sandbox.rocky.tf.algos.vpg_biasADA import VPG as vpg_biasADA
-from sandbox.rocky.tf.algos.vpg_fullADA import VPG as vpg_fullADA
-from sandbox.rocky.tf.algos.vpg_conv import VPG as vpg_conv
-from sandbox.rocky.tf.algos.ppo import PPO as ppo
-
-# from sandbox.rocky.tf.policies.maml_minimal_gauss_mlp_policy_adaptivestep_biastransform import MAMLGaussianMLPPolicy as fullAda_Bias_policy
-from sandbox.rocky.tf.policies.maml_minimal_gauss_mlp_policy_biasonlyadaptivestep_biastransform import \
-    MAMLGaussianMLPPolicy as biasAda_Bias_policy
-
-from multiworld.envs.mujoco.sawyer_xyz.push.sawyer_push import SawyerPushEnv
-from multiworld.envs.mujoco.sawyer_xyz.pickPlace.sawyer_pick_and_place import SawyerPickPlaceEnv
-from multiworld.envs.mujoco.sawyer_xyz.door.sawyer_door_open import SawyerDoorOpenEnv
-from multiworld.envs.mujoco.sawyer_xyz.multi_domain.push_door import Sawyer_MultiDomainEnv
-from multiworld.envs.mujoco.sawyer_xyz.pickPlace.sawyer_coffee import SawyerCoffeeEnv
-
-from rllab.envs.mujoco.ant_env_rand_goal_ring import AntEnvRandGoalRing
-from multiworld.core.flat_goal_env import FlatGoalEnv
-from multiworld.core.finn_maml_env import FinnMamlEnv
-from multiworld.core.wrapper_env import NormalizedBoxEnv
-from sandbox.rocky.tf.samplers.vectorized_sampler import VectorizedSampler
-
-from sandbox.rocky.tf.policies.maml_minimal_gauss_mlp_policy_adaptivestep_ppo import \
-        MAMLGaussianMLPPolicy as PPO_policy
-
-import pickle
-import argparse
-from sandbox.rocky.tf.envs.base import TfEnv
-
-import csv
-import joblib
-import numpy as np
-import pickle
-import tensorflow as tf
 import joblib
 # import doodad as dd
 # from doodad.exp_utils import setup
@@ -84,7 +42,46 @@ def setup(seed, n_parallel, log_dir):
     logger.add_tabular_output(log_dir + '/progress.csv')
 
 
-def experiment(variant, comet_logger=comet_logger):
+def experiment(variant, comet_logger=None):
+    from rllab.baselines.linear_feature_baseline import LinearFeatureBaseline
+    from rllab.baselines.zero_baseline import ZeroBaseline
+    from rllab.envs.normalized_env import normalize
+    from rllab.misc.instrument import stub, run_experiment_lite
+    
+    from sandbox.rocky.tf.algos.vpg import VPG as vpg_basic
+    from sandbox.rocky.tf.algos.vpg_biasADA import VPG as vpg_biasADA
+    from sandbox.rocky.tf.algos.vpg_fullADA import VPG as vpg_fullADA
+    from sandbox.rocky.tf.algos.vpg_conv import VPG as vpg_conv
+    from sandbox.rocky.tf.algos.ppo import PPO as ppo
+    
+    # from sandbox.rocky.tf.policies.maml_minimal_gauss_mlp_policy_adaptivestep_biastransform import MAMLGaussianMLPPolicy as fullAda_Bias_policy
+    from sandbox.rocky.tf.policies.maml_minimal_gauss_mlp_policy_biasonlyadaptivestep_biastransform import \
+        MAMLGaussianMLPPolicy as biasAda_Bias_policy
+    
+    from multiworld.envs.mujoco.sawyer_xyz.push.sawyer_push import SawyerPushEnv
+    from multiworld.envs.mujoco.sawyer_xyz.pickPlace.sawyer_pick_and_place import SawyerPickPlaceEnv
+    from multiworld.envs.mujoco.sawyer_xyz.door.sawyer_door_open import SawyerDoorOpenEnv
+    from multiworld.envs.mujoco.sawyer_xyz.multi_domain.push_door import Sawyer_MultiDomainEnv
+    from multiworld.envs.mujoco.sawyer_xyz.pickPlace.sawyer_coffee import SawyerCoffeeEnv
+    
+    from rllab.envs.mujoco.ant_env_rand_goal_ring import AntEnvRandGoalRing
+    from multiworld.core.flat_goal_env import FlatGoalEnv
+    from multiworld.core.finn_maml_env import FinnMamlEnv
+    from multiworld.core.wrapper_env import NormalizedBoxEnv
+    from sandbox.rocky.tf.samplers.vectorized_sampler import VectorizedSampler
+    
+    from sandbox.rocky.tf.policies.maml_minimal_gauss_mlp_policy_adaptivestep_ppo import \
+            MAMLGaussianMLPPolicy as PPO_policy
+    
+    import pickle
+    import argparse
+    from sandbox.rocky.tf.envs.base import TfEnv
+    import csv
+    import joblib
+    import numpy as np
+    import pickle
+    import tensorflow as tf
+    
     print("%%%%%%%%%%%%%%%%%", comet_logger)
     seed = variant['seed']
     log_dir = variant['log_dir']
@@ -284,6 +281,13 @@ if __name__ == '__main__':
 
     expPrefix = 'Test/Ant/'
     policyType = 'PPO'
+    
+    comet_logger = None
+    
+    comet_logger = CometLogger(api_key="KWwx7zh6I2uw6oQMkpEo3smu0",
+                                project_name="ml4l3", workspace="glenb")
+    comet_logger.set_name("local_test rl ppo")
+
     if 'conv' in policyType:
         expPrefix = 'img-' + expPrefix
 
