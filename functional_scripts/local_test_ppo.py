@@ -203,7 +203,8 @@ def experiment(variant, comet_logger=None):
             sampler_args=dict(n_envs=1),
             # reset_arg=np.asscalar(taskIndex),
             reset_arg=taskIndex,
-            log_dir=log_dir
+            log_dir=log_dir,
+            comet_logger=comet_logger
         )
 
     elif policyType == 'basic':

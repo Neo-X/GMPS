@@ -174,7 +174,7 @@ class BatchPolopt(RLAlgorithm):
             start_time = time.time()
             for itr in range(self.start_itr, self.n_itr):
                 if self.comet_logger:
-                    self.comet_logger.increase_step()
+                    self.comet_logger.set_step(itr)
                 if itr == self.n_itr-1:
                     self.policy.std_modifier = 0.00001
                     #self.policy.std_modifier = 1
