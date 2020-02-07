@@ -1,7 +1,7 @@
 
 
 import tensorflow as tf
-
+import numpy as np
 from rllab.core.serializable import Serializable
 from rllab.misc import ext
 from rllab.misc import logger
@@ -29,6 +29,7 @@ class PPO(BatchPolopt, Serializable):
             default_args = dict(
                 batch_size=None,
                 max_epochs=1,
+                init_learning_rate=1e-5,
             )
             if optimizer_args is None:
                 optimizer_args = default_args
@@ -88,8 +89,9 @@ class PPO(BatchPolopt, Serializable):
         dist_info_vars = self.policy.dist_info_sym(obs_var, state_info_vars)
         logli = dist.log_likelihood_sym(action_var, dist_info_vars)
         # logli_old = dist.log_likelihood_sym(action_var, old_dist_info_vars)
-        r_ = dist.likelihood_ratio_sym(action_var, old_dist_info_vars, dist_info_vars)
-        r_ = tf.clip_by_value(r_, 0.8, 1.2)
+        r__ = dist.likelihood_ratio_sym(action_var, old_dist_info_vars, dist_info_vars)
+        clip_frac = tf.reduce_mean(tf.to_float(tf.greater(tf.abs(r__ - 1.0), 0.2)))
+        r_ = tf.clip_by_value(r__, 0.8, 1.2)
         kl = dist.kl_sym(old_dist_info_vars, dist_info_vars)
 
         # formulate as a minimization problem
@@ -112,7 +114,7 @@ class PPO(BatchPolopt, Serializable):
 
         f_kl = tensor_utils.compile_function(
             inputs=input_list + old_dist_info_vars_list,
-            outputs=[mean_kl, max_kl],
+            outputs=[mean_kl, max_kl, clip_frac, dist_info_vars['log_std']],
         )
         self.opt_info = dict(
             f_kl=f_kl,
@@ -139,9 +141,11 @@ class PPO(BatchPolopt, Serializable):
         logger.record_tabular("LossBefore", loss_before)
         logger.record_tabular("LossAfter", loss_after)
 
-        mean_kl, max_kl = self.opt_info['f_kl'](*(list(inputs) + dist_info_list))
+        mean_kl, max_kl, clip_frac, log_std = self.opt_info['f_kl'](*(list(inputs) + dist_info_list))
         logger.record_tabular('MeanKL', mean_kl)
         logger.record_tabular('MaxKL', max_kl)
+        logger.record_tabular("ClipFrac", clip_frac)
+        logger.record_tabular("AvgStd", np.mean(np.exp(log_std)))
 
     @overrides
     def get_itr_snapshot(self, itr, samples_data):

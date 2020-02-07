@@ -184,9 +184,10 @@ def experiment(variant, comet_logger=None):
             env_spec=env.spec,
             grad_step_size=variant['init_flr'],
             hidden_nonlinearity=tf.nn.relu,
-            hidden_sizes=(100, 100),
+            hidden_sizes=(128, 128),
             init_flr_full=variant['init_flr'],
-            latent_dim=variant['ldim']
+            latent_dim=variant['ldim'],
+            learn_std=False
         )
         
         algo = ppo(
@@ -285,9 +286,9 @@ if __name__ == '__main__':
     
     comet_logger = None
     
-    comet_logger = CometLogger(api_key="KWwx7zh6I2uw6oQMkpEo3smu0",
-                                project_name="ml4l3", workspace="glenb")
-    comet_logger.set_name("local_test rl ppo")
+    # comet_logger = CometLogger(api_key="KWwx7zh6I2uw6oQMkpEo3smu0",
+    #                            project_name="ml4l3", workspace="glenb")
+    # comet_logger.set_name("local_test rl ppo")
 
     if 'conv' in policyType:
         expPrefix = 'img-' + expPrefix
@@ -308,7 +309,7 @@ if __name__ == '__main__':
                'max_path_length': 200}
 
     
-    experiment(variant, comet_logger=comet_logger)
+    experiment(variant)#, comet_logger=comet_logger)
 
 
 
