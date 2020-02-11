@@ -9,6 +9,8 @@ from rllab.misc.overrides import overrides
 from sandbox.rocky.tf.algos.batch_polopt import BatchPolopt
 from sandbox.rocky.tf.misc import tensor_utils
 from sandbox.rocky.tf.optimizers.first_order_optimizer import FirstOrderOptimizer
+from rllab.misc.comet_logger import CometLogger
+
 
 
 class PPO(BatchPolopt, Serializable):
@@ -46,6 +48,9 @@ class PPO(BatchPolopt, Serializable):
             self.extra_input_dim = kwargs["extra_input_dim"]
         else:
             self.extra_input_dim = 0
+
+        if "comet_logger" in kwargs.keys():
+            self.comet_logger = kwargs["comet_logger"]
 
         super(PPO, self).__init__(env=env, policy=policy, baseline=baseline, **kwargs)
 
@@ -146,6 +151,9 @@ class PPO(BatchPolopt, Serializable):
         logger.record_tabular('MaxKL', max_kl)
         logger.record_tabular("ClipFrac", clip_frac)
         logger.record_tabular("AvgStd", np.mean(np.exp(log_std)))
+
+        if self.comet_logger:
+            self.comet_logger.log_metric('ClipFrac', clip_frac)
 
     @overrides
     def get_itr_snapshot(self, itr, samples_data):

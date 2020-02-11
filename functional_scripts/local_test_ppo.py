@@ -286,9 +286,9 @@ if __name__ == '__main__':
     
     comet_logger = None
     
-    # comet_logger = CometLogger(api_key="KWwx7zh6I2uw6oQMkpEo3smu0",
-    #                            project_name="ml4l3", workspace="glenb")
-    # comet_logger.set_name("local_test rl ppo")
+    comet_logger = CometLogger(api_key="KWwx7zh6I2uw6oQMkpEo3smu0",
+                               project_name="ml4l3", workspace="glenb")
+    comet_logger.set_name("local_test rl ppo")
 
     if 'conv' in policyType:
         expPrefix = 'img-' + expPrefix
@@ -309,7 +309,7 @@ if __name__ == '__main__':
                'max_path_length': 200}
 
     
-    experiment(variant)#, comet_logger=comet_logger)
+    experiment(variant, comet_logger=comet_logger)
 
 
 
