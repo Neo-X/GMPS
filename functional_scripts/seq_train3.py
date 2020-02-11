@@ -62,7 +62,7 @@ def train_seq(meta_variant, rl_variant, comet_logger=comet_logger):
         # load_policy = '/home/russell/gmps/data/Ant_repl/rep-10tasks-v2/itr_1.pkl'
         # 'imgObs-Sawyer-Push-v4-mpl-50-numDemos5/Itr_250/'
 
-        n_itr = 20
+        n_itr = 15
         rl_variant['init_file'] = meta_variant['log_dir'] + '/params.pkl'
         rl_variant['taskIndex'] = i
         rl_variant['n_itr'] = n_itr
@@ -74,7 +74,9 @@ def train_seq(meta_variant, rl_variant, comet_logger=comet_logger):
         rl_variant['log_dir'] = EXPERT_DATA_LOC
         rl_variant['outer_iteration'] = outer_iteration
         rl_variant['comet_exp_key'] = comet_exp_key
-        outer_iteration += rl_variant['n_itr']
+        # outer_iteration += rl_variant['n_itr']
+        outer_iteration += 5
+
 
         if (False):
             proc = Process(target=train_experiment, args=(meta_variant, comet_exp_key))
@@ -83,7 +85,7 @@ def train_seq(meta_variant, rl_variant, comet_logger=comet_logger):
         else:
             train_experiment(variant=meta_variant, comet_exp_key=comet_exp_key)
             tf.reset_default_graph()
-            rl_experiment(variant=rl_variant, comet_exp_key=comet_exp_key)
+            rl_experiment(variant=rl_variant, comet_exp_key=None)
             tf.reset_default_graph()
 
         ## run rl test if necessary
@@ -128,7 +130,8 @@ if __name__ == '__main__':
                     'use_maesn': False,
                     'expertDataLoc': EXPERT_DATA_LOC,
                     # 'expertDataLoc': path_to_gmps + '/saved_expert_trajs/ant-quat-v2-10tasks-itr400/',
-                    'n_itr': 20}
+                    'n_itr': 20,
+                    'eval_task_num': 10}
 
     ############# RL SETTING ############
     expPrefix = 'Test/Ant/'
