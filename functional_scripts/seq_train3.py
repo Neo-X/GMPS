@@ -33,7 +33,7 @@ EXPERT_DATA_LOC = test_dir + '/seq_expert_traj/'
 def train_seq(meta_variant, rl_variant, comet_logger=comet_logger):
     from multiprocessing import Process
     comet_exp_key = comet_logger.get_key()
-    start_ = 9
+    start_ = 3
     end_ = 10
     # rl_iterations = [2, 4, 6, 8]
     outer_iteration = 0
@@ -74,7 +74,7 @@ def train_seq(meta_variant, rl_variant, comet_logger=comet_logger):
         rl_variant['log_dir'] = EXPERT_DATA_LOC
         rl_variant['outer_iteration'] = outer_iteration
         rl_variant['comet_exp_key'] = comet_exp_key
-        outer_iteration +=  rl_variant['n_itr']
+        outer_iteration += rl_variant['n_itr']
 
         if (False):
             proc = Process(target=train_experiment, args=(meta_variant, comet_exp_key))
@@ -83,12 +83,8 @@ def train_seq(meta_variant, rl_variant, comet_logger=comet_logger):
         else:
             train_experiment(variant=meta_variant, comet_exp_key=comet_exp_key)
             tf.reset_default_graph()
-            # tf.get_variable_scope().reuse_variables()
             rl_experiment(variant=rl_variant, comet_exp_key=comet_exp_key)
             tf.reset_default_graph()
-            # tf.get_variable_scope().reuse_variables()
-
-        # tf.reset_default_graph()
 
         ## run rl test if necessary
         ## we have trained on tasks 0 ~ i-1, now should test rl on task i
