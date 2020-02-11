@@ -76,6 +76,7 @@ def setup(seed, n_parallel, log_dir):
 
 
 def experiment(variant, comet_exp_key=None):
+    comet_logger = None
     if comet_exp_key is not None:
         # from rllab.misc.comet_logger import CometContinuedLogger, CometLogger
         # from comet_ml import Experiment, ExistingExperiment

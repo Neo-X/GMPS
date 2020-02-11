@@ -79,6 +79,7 @@ class BatchMAMLPolopt(RLAlgorithm):
             debug_pusher=False,
             comet_logger=None,
             outer_iteration=0,
+            eval_task_num=10,
             **kwargs
     ):
         """
@@ -158,10 +159,14 @@ class BatchMAMLPolopt(RLAlgorithm):
         # If we use trajectorie
         self.num_tasks = self.meta_batch_size
         self.contexts = None
+        self.eval_task_num = eval_task_num
 
         self.goals_idxs_for_itr_dict = {}
         for i in range(self.n_itr):
-            self.goals_idxs_for_itr_dict[i] = np.arange(0 , self.meta_batch_size)
+            if i in TESTING_ITRS:
+                self.goals_idxs_for_itr_dict[i] = np.arange(0, self.eval_task_num)
+            else:
+                self.goals_idxs_for_itr_dict[i] = np.arange(0 , self.meta_batch_size)
 
         self.demos_path = expert_trajs_dir
 
@@ -316,7 +321,7 @@ class BatchMAMLPolopt(RLAlgorithm):
 
                         all_samples_data.append(samples_data)
                         # for logging purposes only
-                        self.process_samples(itr, flatten_list(paths.values()), prefix=str(step), log=True, fast_process=True, testitr=testitr, metalearn_baseline=self.metalearn_baseline)
+                        self.process_samples(itr, flatten_list(paths.values()), prefix=str(step), log=(itr in TESTING_ITRS), fast_process=True, testitr=testitr, metalearn_baseline=self.metalearn_baseline)
                         if step == num_inner_updates:
                             logger.record_tabular("AverageReturnLastTest", self.sampler.memory["AverageReturnLastTest"],front=True)  #TODO: add functionality for multiple grad steps
                             logger.record_tabular("TestItr", ("1" if testitr else "0"),front=True)
