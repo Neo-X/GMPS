@@ -132,8 +132,8 @@ def experiment(variant, comet_logger=None):
             obs_keys = ['state_observation']
         env = TfEnv(NormalizedBoxEnv(FinnMamlEnv(FlatGoalEnv(baseEnv, obs_keys=obs_keys), reset_mode='idx')))
 
-    baseline = ZeroBaseline(env_spec=env.spec)
-    # baseline = LinearFeatureBaseline(env_spec = env.spec)
+    # baseline = ZeroBaseline(env_spec=env.spec)
+    baseline = LinearFeatureBaseline(env_spec = env.spec)
     batch_size = variant['batch_size']
 
     if policyType == 'fullAda_Bias':
