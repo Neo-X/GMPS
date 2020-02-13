@@ -132,8 +132,8 @@ def experiment(variant, comet_logger=None):
             obs_keys = ['state_observation']
         env = TfEnv(NormalizedBoxEnv(FinnMamlEnv(FlatGoalEnv(baseEnv, obs_keys=obs_keys), reset_mode='idx')))
 
-    baseline = ZeroBaseline(env_spec=env.spec)
-    # baseline = LinearFeatureBaseline(env_spec = env.spec)
+    # baseline = ZeroBaseline(env_spec=env.spec)
+    baseline = LinearFeatureBaseline(env_spec = env.spec)
     batch_size = variant['batch_size']
 
     if policyType == 'fullAda_Bias':
@@ -184,9 +184,10 @@ def experiment(variant, comet_logger=None):
             env_spec=env.spec,
             grad_step_size=variant['init_flr'],
             hidden_nonlinearity=tf.nn.relu,
-            hidden_sizes=(100, 100),
+            hidden_sizes=(128, 128),
             init_flr_full=variant['init_flr'],
-            latent_dim=variant['ldim']
+            latent_dim=variant['ldim'],
+            learn_std=False
         )
         
         algo = ppo(
@@ -286,7 +287,7 @@ if __name__ == '__main__':
     comet_logger = None
     
     comet_logger = CometLogger(api_key="KWwx7zh6I2uw6oQMkpEo3smu0",
-                                project_name="ml4l3", workspace="glenb")
+                               project_name="ml4l3", workspace="glenb")
     comet_logger.set_name("local_test rl ppo")
 
     if 'conv' in policyType:
