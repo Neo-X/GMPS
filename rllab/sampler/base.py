@@ -86,8 +86,16 @@ class BaseSampler(Sampler):
             else:
                 all_path_baselines = [self.algo.baseline.predict(path) for path in paths]
 
-
-        for idx, path in enumerate(paths):
+        idx = 0
+        while (idx < len(paths)):
+            path = paths[idx]
+            ### VERY BAD but dropping all non-full length paths ###
+            if (len(path["rewards"]) != 200):
+                print("removing path: ", idx, len(paths), len(all_path_baselines))
+                del paths[idx]
+                del all_path_baselines[idx]
+                idx -= 1
+                continue
             if not fast_process and not metalearn_baseline:
                 # if idx==0:
                     # print("debug22", all_path_baselines[idx])
@@ -110,11 +118,18 @@ class BaseSampler(Sampler):
                     path["expert_actions"] = np.array([[None]*len(path['actions'][0])] * len(path['actions']))
 
 
+            idx += 1
+            if (len(path["returns"]) != 200):
+                print("short path: ", len(path["returns"]), len(path["rewards"]), len(path["advantages"]), path["returns"])
+        print("paths: ", train_baseline, len(paths), len(paths[-1]["returns"]), len(paths[-1]["rewards"]))
+
+
         if not fast_process and not metalearn_baseline: # TODO: we want the ev eventually
             ev = special.explained_variance_1d(
                 np.concatenate(baselines),
                 np.concatenate(returns)
             )
+            print("l2: ", np.array(baselines).shape, np.array(returns).shape, (np.array(baselines) - np.array(returns)).shape)
             l2 = np.linalg.norm(np.array(baselines)-np.array(returns))
 
         if not self.algo.policy.recurrent:

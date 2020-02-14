@@ -10,6 +10,7 @@ from rllab.misc.comet_logger import CometLogger
 ## TODO: Batch size vs amount of data collected
 ## TODO: Number of PPO update steps
 
+import tensorflow as tf
 import joblib
 # import doodad as dd
 # from doodad.exp_utils import setup
@@ -117,7 +118,7 @@ def experiment(variant, comet_logger=None):
         baseEnv = SawyerDoorOpenEnv(tasks=tasks, image=use_images, mpl=max_path_length)
 
     elif 'Ant' in envType:
-        env = TfEnv(normalize(AntEnvRandGoalRing()))
+        env = TfEnv(normalize(AntEnvRandGoalRing(render_env=True)))
 
     elif 'Coffee' in envType:
         baseEnv = SawyerCoffeeEnv(mpl=max_path_length)
@@ -179,20 +180,20 @@ def experiment(variant, comet_logger=None):
         
     elif policyType == 'PPO':
 
-        policy = PPO_policy(
-            name="policy",
-            env_spec=env.spec,
-            grad_step_size=variant['init_flr'],
-            hidden_nonlinearity=tf.nn.relu,
-            hidden_sizes=(128, 128),
-            init_flr_full=variant['init_flr'],
-            latent_dim=variant['ldim'],
-            learn_std=False
-        )
+        # policy = PPO_policy(
+        #     name="policy",
+        #     env_spec=env.spec,
+        #     grad_step_size=variant['init_flr'],
+        #     hidden_nonlinearity=tf.nn.relu,
+        #     hidden_sizes=(128, 128),
+        #     init_flr_full=variant['init_flr'],
+        #     latent_dim=variant['ldim'],
+        #     learn_std=False
+        # )
         
         algo = ppo(
             env=env,
-            policy=policy,
+            policy=None,
             load_policy=init_file,
             baseline=baseline,
             batch_size=batch_size,  # 2x
@@ -205,7 +206,8 @@ def experiment(variant, comet_logger=None):
             # reset_arg=np.asscalar(taskIndex),
             reset_arg=taskIndex,
             log_dir=log_dir,
-            comet_logger=comet_logger
+            comet_logger=comet_logger,
+            #test=True
         )
 
     elif policyType == 'basic':
@@ -285,7 +287,7 @@ if __name__ == '__main__':
     policyType = 'PPO'
     
     comet_logger = None
-    
+
     comet_logger = CometLogger(api_key="KWwx7zh6I2uw6oQMkpEo3smu0",
                                project_name="ml4l3", workspace="glenb")
     comet_logger.set_name("local_test rl ppo")
@@ -293,10 +295,10 @@ if __name__ == '__main__':
     if 'conv' in policyType:
         expPrefix = 'img-' + expPrefix
 
-    variant = {'taskIndex': 0,
-               'init_file': None,
+    variant = {'taskIndex': 5,
+               'init_file': 'data/Ant_repl/itr_9.pkl',
                'n_parallel': 8,
-               'log_dir': 'data/Ant/',
+               'log_dir': 'data/Ant',
                'seed': 123,
                'tasksFile': 'rad2_quat_v2',
                'batch_size': 10000,
