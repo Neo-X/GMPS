@@ -22,7 +22,7 @@ print(comet_logger.get_key())
 
 import tensorflow as tf
 from functional_scripts.remote_train import experiment as train_experiment
-from functional_scripts.local_test import experiment as rl_experiment
+from functional_scripts.local_test_ppo import experiment as rl_experiment
 
 path_to_gmps = GMPS_PATH
 test_dir = path_to_gmps + '/seq_test/'
@@ -62,7 +62,7 @@ def train_seq(meta_variant, rl_variant, comet_logger=comet_logger):
         # load_policy = '/home/russell/gmps/data/Ant_repl/rep-10tasks-v2/itr_1.pkl'
         # 'imgObs-Sawyer-Push-v4-mpl-50-numDemos5/Itr_250/'
 
-        n_itr = 15
+        n_itr = 1
         rl_variant['init_file'] = meta_variant['log_dir'] + '/params.pkl'
         rl_variant['taskIndex'] = i
         rl_variant['n_itr'] = n_itr
@@ -130,7 +130,7 @@ if __name__ == '__main__':
                     'use_maesn': False,
                     'expertDataLoc': EXPERT_DATA_LOC,
                     # 'expertDataLoc': path_to_gmps + '/saved_expert_trajs/ant-quat-v2-10tasks-itr400/',
-                    'n_itr': 20,
+                    'n_itr': 1,
                     'eval_task_num': 10}
 
     ############# RL SETTING ############
@@ -149,7 +149,9 @@ if __name__ == '__main__':
                   'policyType': policyType,
                   'n_itr': None,
                   'default_step': 0.5,
+                  'init_flr': 0.5,
                   'envType': 'Ant',
                   'max_path_length': 200}
+
 
     train_seq(meta_variant=meta_variant, rl_variant=rl_variant, comet_logger=comet_logger)
