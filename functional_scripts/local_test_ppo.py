@@ -179,16 +179,18 @@ def experiment(variant, comet_logger=None):
         
     elif policyType == 'PPO':
 
-        policy = PPO_policy(
-            name="policy",
-            env_spec=env.spec,
-            grad_step_size=variant['init_flr'],
-            hidden_nonlinearity=tf.nn.relu,
-            hidden_sizes=(128, 128),
-            init_flr_full=variant['init_flr'],
-            latent_dim=variant['ldim'],
-            learn_std=False
-        )
+        policy = None
+        if not init_file:
+            policy = PPO_policy(
+                name="policy",
+                env_spec=env.spec,
+                grad_step_size=variant['init_flr'],
+                hidden_nonlinearity=tf.nn.relu,
+                hidden_sizes=(128, 128),
+                init_flr_full=variant['init_flr'],
+                latent_dim=variant['ldim'],
+                learn_std=False
+            )
         
         algo = ppo(
             env=env,
