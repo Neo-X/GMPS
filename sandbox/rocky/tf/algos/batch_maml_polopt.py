@@ -80,6 +80,7 @@ class BatchMAMLPolopt(RLAlgorithm):
             comet_logger=None,
             outer_iteration=0,
             # eval_task_num=10,
+            total_tasks=None,
             **kwargs
     ):
         """
@@ -160,6 +161,7 @@ class BatchMAMLPolopt(RLAlgorithm):
         self.num_tasks = self.meta_batch_size
         self.contexts = None
         # self.eval_task_num = eval_task_num
+        self.total_tasks = total_tasks
 
         self.goals_idxs_for_itr_dict = {}
         for i in range(self.n_itr):
@@ -167,7 +169,7 @@ class BatchMAMLPolopt(RLAlgorithm):
             #     self.goals_idxs_for_itr_dict[i] = np.arange(0, self.eval_task_num)
             # else:
             #     self.goals_idxs_for_itr_dict[i] = np.arange(0 , self.meta_batch_size)
-            self.goals_idxs_for_itr_dict[i] = np.arange(0, self.meta_batch_size)
+            self.goals_idxs_for_itr_dict[i] = total_tasks[meta_batch_size]
 
         self.demos_path = expert_trajs_dir
 

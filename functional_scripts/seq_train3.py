@@ -30,7 +30,9 @@ path_to_gmps = GMPS_PATH
 test_dir = path_to_gmps + '/zzw_data/'
 meta_log_dir = test_dir + '/meta_data/'
 EXPERT_DATA_LOC = test_dir + '/seq_expert_traj/'
-
+import numpy as np
+np.random.seed(0)
+total_tasks = np.random.shuffle(np.arrange(0, 40))
 
 def train_seq(meta_variant, rl_variant, comet_logger=comet_logger):
     comet_exp_key = comet_logger.get_key()
@@ -54,10 +56,11 @@ def train_seq(meta_variant, rl_variant, comet_logger=comet_logger):
         meta_variant['load_policy'] = None
         meta_variant['comet_exp_key'] = comet_exp_key
         meta_variant['outer_iteration'] = outer_iteration
+        meta_variant['total_tasks'] = total_tasks
 
         n_itr = 100
         rl_variant['init_file'] = meta_variant['log_dir'] + '/params.pkl'
-        rl_variant['taskIndex'] = i
+        rl_variant['taskIndex'] = total_tasks[i]
         rl_variant['n_itr'] = n_itr
 
         rl_variant['log_dir'] = EXPERT_DATA_LOC
