@@ -21,7 +21,7 @@ print(comet_logger.get_key())
 # comet_logger.end()
 
 import tensorflow as tf
-from functional_scripts.remote_train import experiment as train_experiment
+from functional_scripts.remote_train_ppo import experiment as train_experiment
 from functional_scripts.local_test_ppo import experiment as rl_experiment
 
 path_to_gmps = GMPS_PATH
@@ -42,9 +42,9 @@ def train_seq(meta_variant, rl_variant, comet_logger=comet_logger):
 
         # policyType = 'conv_fcBiasAda'
         load_policy = None
-        n_meta_itr = meta_variant['n_itr']
-        if (i > start_):
-            load_policy = meta_log_dir + 'debug-' + str(i - 1) + 'tasks-v0/params.pkl'
+        # n_meta_itr = meta_variant['n_itr']
+        # if (i > start_):
+        #     load_policy = meta_log_dir + 'debug-' + str(i - 1) + 'tasks-v0/params.pkl'
 
         meta_variant['log_dir'] = meta_log_dir + annotation
         meta_variant['mbs'] = i
@@ -52,26 +52,25 @@ def train_seq(meta_variant, rl_variant, comet_logger=comet_logger):
         meta_variant['load_policy'] = None
         meta_variant['comet_exp_key'] = comet_exp_key
         meta_variant['outer_iteration'] = outer_iteration
-        outer_iteration += meta_variant['n_itr']
 
+        n_itr = 100
+        rl_variant['init_file'] = meta_variant['log_dir'] + '/params.pkl'
+        rl_variant['taskIndex'] = i
+        rl_variant['n_itr'] = n_itr
 
-
-        # n_itr = 1
-        # rl_variant['init_file'] = meta_variant['log_dir'] + '/params.pkl'
-        # rl_variant['taskIndex'] = i
-        # rl_variant['n_itr'] = n_itr
-        #
-        # rl_variant['log_dir'] = EXPERT_DATA_LOC
-        # rl_variant['outer_iteration'] = outer_iteration
-        # rl_variant['comet_exp_key'] = comet_exp_key
-        # outer_iteration += rl_variant['n_itr']
+        rl_variant['log_dir'] = EXPERT_DATA_LOC
+        rl_variant['outer_iteration'] = outer_iteration
+        rl_variant['comet_exp_key'] = comet_exp_key
+        outer_iteration += rl_variant['n_itr']
         # outer_iteration += 5
 
 
         train_experiment(variant=meta_variant, comet_exp_key=comet_exp_key)
         tf.reset_default_graph()
-            # rl_experiment(variant=rl_variant, comet_logger=comet_logger)
-            # tf.reset_default_graph()
+        outer_iteration += meta_variant['n_itr']
+        # rl_experiment(variant=rl_variant, comet_logger=comet_logger)
+        # tf.reset_default_graph()
+        # outer_iteration += rl_variant['n_itr']
 
         ## run rl test if necessary
         ## we have trained on tasks 0 ~ i-1, now should test rl on task i

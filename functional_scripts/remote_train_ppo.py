@@ -4,7 +4,7 @@ from rllab.misc.ext import set_seed
 import rllab.misc.logger as logger
 
 import os
-GMPS_PATH = os.environ['GMPS_PATH']
+GMPS_PATH = os.environ['CoMPS_PATH']
 MULTIWORL_PATH= os.environ['MULTIWORLD_PATH']
 path_to_gmps = GMPS_PATH
 path_to_multiworld = MULTIWORL_PATH
@@ -98,25 +98,24 @@ def experiment(variant, comet_exp_key=None):
     
     print ("Done loading libraries")
     
-    seed = variant['seed'];
-    n_parallel = 1;
+    seed = variant['seed']
+    n_parallel = 1
     log_dir = variant['log_dir']
 
-    x=0
     setup(seed, n_parallel, log_dir)
-    fast_batch_size = variant['fbs'];
+    fast_batch_size = variant['fbs']
     meta_batch_size = variant['mbs']
-    adam_steps = variant['adam_steps'];
+    adam_steps = variant['adam_steps']
     max_path_length = variant['max_path_length']
-    dagger = variant['dagger'];
+    dagger = variant['dagger']
     expert_policy_loc = variant['expert_policy_loc']
-    ldim = variant['ldim'];
-    init_flr = variant['init_flr'];
-    policyType = variant['policyType'];
+    ldim = variant['ldim']
+    init_flr = variant['init_flr']
+    policyType = variant['policyType']
     use_maesn = variant['use_maesn']
     EXPERT_TRAJ_LOCATION = variant['expertDataLoc']
     envType = variant['envType']
-    tasksFile = path_to_multiworld + 'multiworld/envs/goals/' + variant['tasksFile'] + '.pkl'
+    tasksFile = path_to_multiworld + '/multiworld/envs/goals/' + variant['tasksFile'] + '.pkl'
     all_tasks = pickle.load(open(tasksFile, 'rb'))
     assert meta_batch_size <= len(all_tasks), "meta batch size wrong: " + str(meta_batch_size) + " <= " + str(len(all_tasks))
     tasks = all_tasks[:meta_batch_size]
