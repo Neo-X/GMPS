@@ -31,10 +31,9 @@ EXPERT_DATA_LOC = test_dir + '/seq_expert_traj/'
 
 
 def train_seq(meta_variant, rl_variant, comet_logger=comet_logger):
-    from multiprocessing import Process
     comet_exp_key = comet_logger.get_key()
     start_ = 3
-    end_ = 10
+    end_ = 4
     # rl_iterations = [2, 4, 6, 8]
     outer_iteration = 0
     for i in range(start_, end_):
@@ -54,39 +53,25 @@ def train_seq(meta_variant, rl_variant, comet_logger=comet_logger):
         meta_variant['comet_exp_key'] = comet_exp_key
         meta_variant['outer_iteration'] = outer_iteration
         outer_iteration += meta_variant['n_itr']
-        ### fbs is the number of epochs to sample
-        ### mbs is the number of tasks to sample using range(0,mbs), so they are not sampled from the full set of tasks.
 
-        # load_policy = '/home/russell/data/s3/Ant-dense-quat-v2-itr400/mri_rosen/policyType_fullAda_Bias/'+\
-        #             'ldim_4/adamSteps_500_mbs_40_fbs_50_initFlr_0.5_seed_1/itr_9.pkl'
-        # load_policy = '/home/russell/gmps/data/Ant_repl/rep-10tasks-v2/itr_1.pkl'
-        # 'imgObs-Sawyer-Push-v4-mpl-50-numDemos5/Itr_250/'
 
-        n_itr = 1
-        rl_variant['init_file'] = meta_variant['log_dir'] + '/params.pkl'
-        rl_variant['taskIndex'] = i
-        rl_variant['n_itr'] = n_itr
-        # if i >= 4:
-        #     print('CHANGINGGGGGGGGGGGG BACK TO REAL EXPERT DATA LOC')
-        #     rl_variant['log_dir'] = EXPERT_DATA_LOC
-        # else:
-        #     rl_variant['log_dir'] = EXPERT_DATA_LOC + '/tempholder/'
-        rl_variant['log_dir'] = EXPERT_DATA_LOC
-        rl_variant['outer_iteration'] = outer_iteration
-        rl_variant['comet_exp_key'] = comet_exp_key
+
+        # n_itr = 1
+        # rl_variant['init_file'] = meta_variant['log_dir'] + '/params.pkl'
+        # rl_variant['taskIndex'] = i
+        # rl_variant['n_itr'] = n_itr
+        #
+        # rl_variant['log_dir'] = EXPERT_DATA_LOC
+        # rl_variant['outer_iteration'] = outer_iteration
+        # rl_variant['comet_exp_key'] = comet_exp_key
         # outer_iteration += rl_variant['n_itr']
-        outer_iteration += 5
+        # outer_iteration += 5
 
 
-        if (False):
-            proc = Process(target=train_experiment, args=(meta_variant, comet_exp_key))
-            proc.start()
-            proc.join()
-        else:
-            train_experiment(variant=meta_variant, comet_exp_key=comet_exp_key)
-            tf.reset_default_graph()
-            rl_experiment(variant=rl_variant, comet_logger=comet_logger)
-            tf.reset_default_graph()
+        train_experiment(variant=meta_variant, comet_exp_key=comet_exp_key)
+        tf.reset_default_graph()
+            # rl_experiment(variant=rl_variant, comet_logger=comet_logger)
+            # tf.reset_default_graph()
 
         ## run rl test if necessary
         ## we have trained on tasks 0 ~ i-1, now should test rl on task i
@@ -130,8 +115,9 @@ if __name__ == '__main__':
                     'use_maesn': False,
                     'expertDataLoc': EXPERT_DATA_LOC,
                     # 'expertDataLoc': path_to_gmps + '/saved_expert_trajs/ant-quat-v2-10tasks-itr400/',
-                    'n_itr': 1,
-                    'eval_task_num': 10}
+                    'n_itr': 40
+                    # 'eval_task_num': 10
+                    }
 
     ############# RL SETTING ############
     expPrefix = 'Test/Ant/'

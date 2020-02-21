@@ -79,7 +79,7 @@ class BatchMAMLPolopt(RLAlgorithm):
             debug_pusher=False,
             comet_logger=None,
             outer_iteration=0,
-            eval_task_num=10,
+            # eval_task_num=10,
             **kwargs
     ):
         """
@@ -159,14 +159,15 @@ class BatchMAMLPolopt(RLAlgorithm):
         # If we use trajectorie
         self.num_tasks = self.meta_batch_size
         self.contexts = None
-        self.eval_task_num = eval_task_num
+        # self.eval_task_num = eval_task_num
 
         self.goals_idxs_for_itr_dict = {}
         for i in range(self.n_itr):
-            if i in TESTING_ITRS:
-                self.goals_idxs_for_itr_dict[i] = np.arange(0, self.eval_task_num)
-            else:
-                self.goals_idxs_for_itr_dict[i] = np.arange(0 , self.meta_batch_size)
+            # if i in TESTING_ITRS:
+            #     self.goals_idxs_for_itr_dict[i] = np.arange(0, self.eval_task_num)
+            # else:
+            #     self.goals_idxs_for_itr_dict[i] = np.arange(0 , self.meta_batch_size)
+            self.goals_idxs_for_itr_dict[i] = np.arange(0, self.meta_batch_size)
 
         self.demos_path = expert_trajs_dir
 

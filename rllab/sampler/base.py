@@ -252,10 +252,10 @@ class BaseSampler(Sampler):
             )
 
         if log and comet_logger:
-            comet_logger.log_metric('StdReturn', np.std(undiscounted_returns))
-            comet_logger.log_metric('MaxReturn', np.max(undiscounted_returns))
-            comet_logger.log_metric('MinReturn', np.min(undiscounted_returns))
-            comet_logger.log_metric('AverageReturn', np.mean(undiscounted_returns))
+            comet_logger.log_metric(prefix + 'StdReturn', np.std(undiscounted_returns))
+            comet_logger.log_metric(prefix + 'MaxReturn', np.max(undiscounted_returns))
+            comet_logger.log_metric(prefix + 'MinReturn', np.min(undiscounted_returns))
+            comet_logger.log_metric(prefix + 'AverageReturn', np.mean(undiscounted_returns))
         if log:
             # logger.record_tabular('Iteration', itr)
             # logger.record_tabular('AverageDiscountedReturn',

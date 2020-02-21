@@ -258,8 +258,8 @@ def experiment(variant, comet_exp_key=None):
         dagger=dagger,
         expert_policy_loc=expert_policy_loc,
         comet_logger=comet_log,
-        outer_iteration=variant['outer_iteration'],
-        eval_task_num=variant['eval_task_num']
+        outer_iteration=variant['outer_iteration']
+        # eval_task_num=variant['eval_task_num']
     )
 
     algo.train()
