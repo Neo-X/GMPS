@@ -273,7 +273,7 @@ def experiment(variant, comet_exp_key=None):
         dagger=dagger,
         expert_policy_loc=expert_policy_loc,
         comet_logger=comet_log,
-        outerIteration=variant['outer_Iteration'],
+        outerIteration=variant['outer_iteration'],
         use_ppo=True
     )
 

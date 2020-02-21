@@ -98,7 +98,7 @@ if __name__ == '__main__':
     path_to_gmps = GMPS_PATH
     path_to_multiworld = MULTIWORL_PATH
     # log_dir = path_to_gmps + '/data/Ant_repl/'
-    meta_variant = {'policyType': 'fullAda_Bias',
+    meta_variant = {'policyType': 'fullAda_PPO',
                     'ldim': 4,
                     'init_flr': 0.5,
                     'seed': None,

@@ -209,7 +209,8 @@ def experiment(variant, comet_logger=None):
             # reset_arg=np.asscalar(taskIndex),
             reset_arg=taskIndex,
             log_dir=log_dir,
-            comet_logger=comet_logger
+            comet_logger=comet_logger,
+            outer_iteration=variant['outer_iteration']
         )
 
     elif policyType == 'basic':
