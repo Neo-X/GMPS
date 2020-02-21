@@ -6,6 +6,8 @@ import rllab.misc.logger as logger
 import os
 GMPS_PATH = os.environ['CoMPS_PATH']
 MULTIWORL_PATH= os.environ['MULTIWORLD_PATH']
+sys.path.append(GMPS_PATH)
+sys.path.append(MULTIWORL_PATH)
 path_to_gmps = GMPS_PATH
 path_to_multiworld = MULTIWORL_PATH
 

@@ -10,6 +10,8 @@ import os
 
 GMPS_PATH = os.environ['CoMPS_PATH']
 MULTIWORL_PATH = os.environ['MULTIWORLD_PATH']
+sys.path.append(GMPS_PATH)
+sys.path.append(MULTIWORL_PATH)
 from comet_ml import Experiment
 
 comet_logger = Experiment(api_key="KWwx7zh6I2uw6oQMkpEo3smu0",
