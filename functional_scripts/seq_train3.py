@@ -25,7 +25,7 @@ from functional_scripts.remote_train import experiment as train_experiment
 from functional_scripts.local_test_ppo import experiment as rl_experiment
 
 path_to_gmps = GMPS_PATH
-test_dir = path_to_gmps + '/seq_test/'
+test_dir = path_to_gmps + '/zzw_data/'
 meta_log_dir = test_dir + '/meta_data/'
 EXPERT_DATA_LOC = test_dir + '/seq_expert_traj/'
 
