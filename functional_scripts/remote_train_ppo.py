@@ -2,6 +2,7 @@ import sys
 import os
 from rllab.misc.ext import set_seed
 import rllab.misc.logger as logger
+logger._snapshot_mode="last"
 
 import os
 GMPS_PATH = os.environ['CoMPS_PATH']

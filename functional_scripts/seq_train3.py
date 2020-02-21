@@ -74,24 +74,6 @@ def train_seq(meta_variant, rl_variant, comet_logger=comet_logger):
         tf.reset_default_graph()
         # outer_iteration += rl_variant['n_itr']
 
-        ## run rl test if necessary
-        ## we have trained on tasks 0 ~ i-1, now should test rl on task i
-        """
-        if i in rl_iterations: ### Glen TODO I am not sure why this is done only specific iterations.
-            expPrefix_numItr = expPrefix + '/Task_' + str(i) + '/'
-            # for n_itr in range(1,6):
-            n_itr = 1
-            expName = expPrefix_numItr + 'Itr_' + str(n_itr)
-            rl_variant['init_file'] = meta_variant['log_dir'] + '/itr_' + str(n_meta_itr - 1) + '.pkl'
-            rl_variant['taskIndex'] = i
-            rl_variant['n_itr'] = n_itr
-            rl_variant['log_dir'] = RL_OUTPUT_DIR + expName + '/'
-            rl_experiment(rl_variant, comet_logger=comet_logger)
-            proc = Process(target=rl_experiment, args=(rl_variant, comet_logger.get_key()))
-            proc.start()
-            proc.join()
-            # tf.reset_default_graph()
-        """
 
 
 if __name__ == '__main__':

@@ -14,6 +14,8 @@ import joblib
 # import doodad as dd
 # from doodad.exp_utils import setup
 import rllab.misc.logger as logger
+logger._snapshot_mode="last"
+
 from rllab.misc.ext import  set_seed
 import os
 
