@@ -4,7 +4,7 @@ from rllab.misc.ext import set_seed
 import rllab.misc.logger as logger
 
 import os
-GMPS_PATH = os.environ['GMPS_PATH']
+GMPS_PATH = os.environ['CoMPS_PATH']
 MULTIWORL_PATH= os.environ['MULTIWORLD_PATH']
 path_to_gmps = GMPS_PATH
 path_to_multiworld = MULTIWORL_PATH
@@ -114,7 +114,7 @@ def experiment(variant, comet_exp_key=None):
     use_maesn = variant['use_maesn']
     EXPERT_TRAJ_LOCATION = variant['expertDataLoc']
     envType = variant['envType']
-    tasksFile = path_to_multiworld + 'multiworld/envs/goals/' + variant['tasksFile'] + '.pkl'
+    tasksFile = path_to_multiworld + '/multiworld/envs/goals/' + variant['tasksFile'] + '.pkl'
     all_tasks = pickle.load(open(tasksFile, 'rb'))
     assert meta_batch_size <= len(all_tasks), "meta batch size wrong: " + str(meta_batch_size) + " <= " + str(len(all_tasks))
     tasks = all_tasks[:meta_batch_size]

@@ -18,7 +18,7 @@ from rllab.misc.ext import  set_seed
 import os
 
 import os
-GMPS_PATH = os.environ['GMPS_PATH']
+GMPS_PATH = os.environ['CoMPS_PATH']
 MULTIWORL_PATH= os.environ['MULTIWORLD_PATH']
 path_to_gmps = GMPS_PATH
 path_to_multiworld = MULTIWORL_PATH

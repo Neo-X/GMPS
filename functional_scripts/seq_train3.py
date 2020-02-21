@@ -8,7 +8,7 @@
 import sys
 import os
 
-GMPS_PATH = os.environ['GMPS_PATH']
+GMPS_PATH = os.environ['CoMPS_PATH']
 MULTIWORL_PATH = os.environ['MULTIWORLD_PATH']
 from comet_ml import Experiment
 
