@@ -275,6 +275,7 @@ def experiment(variant, comet_exp_key=None):
         expert_policy_loc=expert_policy_loc,
         comet_logger=comet_log,
         outerIteration=variant['outer_iteration'],
+        total_tasks=variant["total_tasks"],
         use_ppo=True
     )
 
