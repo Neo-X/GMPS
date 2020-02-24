@@ -151,7 +151,7 @@ class BatchPolopt(RLAlgorithm):
         return self.sampler.obtain_samples(itr=itr, reset_args=reset_args, return_dict=False, preupdate=preupdate)
 
     def process_samples(self, itr, paths):
-        return self.sampler.process_samples(itr, paths, comet_logger=self.comet_logger)
+        return self.sampler.process_samples(itr, paths, comet_logger=self.comet_logger, rl=True)
 
     def train(self):
 

@@ -50,9 +50,11 @@ class BaseSampler(Sampler):
         self.memory["AverageReturnLastTest"] = 0.0
         self.memory["AverageReturnBestTest"] = 0.0
 
-    def process_samples(self, itr, paths, prefix='', log=True, fast_process=False, testitr=False, metalearn_baseline=False, comet_logger=None):
+    def process_samples(self, itr, paths, prefix='', log=True, fast_process=False, testitr=False, metalearn_baseline=False, comet_logger=None, rl=False):
         baselines = []
         returns = []
+        if rl:
+            prefix = prefix + "RL-"
         if testitr:
             metalearn_baseline = False
         train_baseline = (itr in BASELINE_TRAINING_ITRS)
