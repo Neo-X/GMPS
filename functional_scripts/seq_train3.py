@@ -49,7 +49,7 @@ def train_seq(meta_variant, rl_variant, comet_logger=comet_logger):
         # n_meta_itr = meta_variant['n_itr']
         # if (i > start_):
         #     load_policy = meta_log_dir + 'debug-' + str(i - 1) + 'tasks-v0/params.pkl'
-
+        print("TOTAL TASKS:::::::::;", total_tasks)
         meta_variant['log_dir'] = meta_log_dir + annotation
         meta_variant['mbs'] = i
         meta_variant['seed'] = i
@@ -107,7 +107,7 @@ if __name__ == '__main__':
 
     ############# RL SETTING ############
     expPrefix = 'Test/Ant/'
-    policyType = 'fullAda_Bias'
+    policyType = 'PPO'
     if 'conv' in policyType:
         expPrefix = 'img-' + expPrefix
 
