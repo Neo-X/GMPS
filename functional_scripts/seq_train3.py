@@ -34,13 +34,16 @@ import numpy as np
 
 def train_seq(meta_variant, rl_variant, comet_logger=comet_logger):
     np.random.seed(0)
-    total_tasks = np.arange(0, 40)
-    np.random.shuffle(total_tasks)
+    tasks_p1 = np.arange(0, 10)
+    tasks_p2 = np.arange(10, 40)
+    np.random.shuffle(tasks_p1)
+    np.random.shuffle(tasks_p2)
+    total_tasks = np.concatenate((tasks_p1, tasks_p2))
     comet_exp_key = comet_logger.get_key()
     start_ = 3
     end_ = 10
     for i in range(start_):
-        os.system("cp zzw_data/seq_expert_traj/ant-quat-v2-10tasks-itr400/" + str(i) + ".pkl, zzw_data/seq_expert_traj/")
+        os.system("cp zzw_data/seq_expert_traj/ant-quat-v2-10tasks-itr400/" + str(total_tasks[i]) + ".pkl, zzw_data/seq_expert_traj/")
 
     # rl_iterations = [2, 4, 6, 8]
     outer_iteration = 0
