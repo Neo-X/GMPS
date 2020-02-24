@@ -169,7 +169,7 @@ class BatchMAMLPolopt(RLAlgorithm):
             #     self.goals_idxs_for_itr_dict[i] = np.arange(0, self.eval_task_num)
             # else:
             #     self.goals_idxs_for_itr_dict[i] = np.arange(0 , self.meta_batch_size)
-            self.goals_idxs_for_itr_dict[i] = total_tasks[meta_batch_size]
+            self.goals_idxs_for_itr_dict[i] = total_tasks[:meta_batch_size]
 
         self.demos_path = expert_trajs_dir
 
