@@ -34,7 +34,8 @@ import numpy as np
 
 def train_seq(meta_variant, rl_variant, comet_logger=comet_logger):
     np.random.seed(0)
-    total_tasks = np.random.shuffle(np.arange(0, 40))
+    total_tasks = np.arange(0, 40)
+    np.random.shuffle(total_tasks)
     comet_exp_key = comet_logger.get_key()
     start_ = 3
     end_ = 10
