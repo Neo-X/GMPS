@@ -31,10 +31,10 @@ test_dir = path_to_gmps + '/zzw_data/'
 meta_log_dir = test_dir + '/meta_data/'
 EXPERT_DATA_LOC = test_dir + '/seq_expert_traj/'
 import numpy as np
-np.random.seed(0)
-total_tasks = np.random.shuffle(np.arange(0, 40))
 
 def train_seq(meta_variant, rl_variant, comet_logger=comet_logger):
+    np.random.seed(0)
+    total_tasks = np.random.shuffle(np.arange(0, 40))
     comet_exp_key = comet_logger.get_key()
     start_ = 3
     end_ = 10
