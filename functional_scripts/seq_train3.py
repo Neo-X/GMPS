@@ -77,12 +77,12 @@ def train_seq(meta_variant, rl_variant, comet_logger=comet_logger):
         # outer_iteration += 5
 
 
-        # train_experiment(variant=meta_variant, comet_exp_key=comet_exp_key)
-        # tf.reset_default_graph()
+        train_experiment(variant=meta_variant, comet_exp_key=comet_exp_key)
+        tf.reset_default_graph()
         outer_iteration += meta_variant['n_itr']
         rl_experiment(variant=rl_variant, comet_logger=comet_logger)
         tf.reset_default_graph()
-        # outer_iteration += rl_variant['n_itr']
+        outer_iteration += rl_variant['n_itr']
 
 
 
